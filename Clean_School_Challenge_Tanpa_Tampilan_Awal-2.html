@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Clean School Challenge</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#e8f5e9;color:#222;text-align:center}
+header{background:#176b3a;color:#fff;padding:18px}
+button{border:0;padding:13px 25px;margin:8px;border-radius:12px;background:#176b3a;color:#fff;font-size:16px;font-weight:bold;cursor:pointer}
+button:hover{background:#0d4d29;transform:scale(1.03)}
+.menu,.cara,.hasil,.levelSelesai{width:92%;max-width:540px;margin:35px auto;background:#fff;padding:30px;border-radius:20px;box-shadow:0 5px 20px #aaa}
+
+
+.introCard:before{
+content:"";
+position:absolute;
+inset:0;
+background:
+radial-gradient(circle at 10% 15%,#b9ebff 0 28px,transparent 29px),
+radial-gradient(circle at 90% 20%,#b9ebff 0 35px,transparent 36px);
+opacity:.65;
+}
+
+.instructionBox{
+margin:25px auto 15px;
+max-width:580px;
+padding:18px 22px;
+border:4px solid #f1ce4d;
+border-radius:24px;
+background:#fff8cf;
+color:#176b3a;
+font-size:clamp(15px,2vw,21px);
+line-height:1.35;
+box-shadow:0 5px 0 #e5c449;
+animation:infoFloat 2s ease-in-out infinite alternate;
+}
+
+.instructionIcon{
+font-size:35px;
+display:inline-block;
+animation:pointPulse 1s infinite;
+}
+
+.startHit{
+position:relative;
+width:min(75%,380px);
+height:68px;
+margin:8px auto 0;
+border-radius:20px;
+background:linear-gradient(#48bd50,#168b3d);
+color:#fff;
+border:4px solid #fff;
+box-shadow:0 7px 0 #0d6b2c,0 10px 25px rgba(0,0,0,.2);
+font-size:clamp(18px,2.5vw,28px);
+font-weight:1000;
+cursor:pointer;
+z-index:7;
+animation:startPulse 1.2s infinite;
+}
+
+.startHit:hover{
+transform:scale(1.04);
+}
+
+.startHit:after{
+content:"👆";
+position:absolute;
+right:-42px;
+top:-25px;
+font-size:38px;
+animation:tapButton 1.2s infinite;
+}
+
+.eye1{left:12px}
+.eye2{right:12px}
+
+to{transform:scale(1);opacity:1}
+}
+
+to{transform:translateY(-8px)}
+}
+
+to{transform:translateY(-5px)}
+}
+
+50%{transform:scale(1.15) rotate(-8deg)}
+}
+
+50%{transform:scale(1.045)}
+}
+
+40%{transform:translate(-8px,10px) rotate(-15deg);opacity:1}
+60%{transform:translate(0,0) rotate(0);opacity:.5}
+}
+
+50%{transform:translateY(10px)}
+}
+
+to{transform:translateY(-9px)}
+}
+
+@media(max-width:700px){
+.instructionBox{
+font-size:12px;
+padding:12px 8px;
+margin:15px auto 10px;
+}
+.instructionIcon{
+font-size:25px;
+}
+.startHit{
+width:90%;
+height:55px;
+font-size:16px;
+}
+.startHit:after{
+font-size:28px;
+right:-25px;
+top:-20px;
+}
+}
+
+.sekolah{width:100%;height:170px;margin:20px 0;background:#b3e5fc;border-radius:15px;position:relative;overflow:hidden}
+.awan{position:absolute;font-size:35px}.awan1{left:10%;top:15px}.awan2{right:10%;top:30px}
+.gedung{position:absolute;bottom:0;left:15%;width:70%;height:100px;background:#fff;border:4px solid #444}
+.atap{position:absolute;top:-45px;left:-10%;width:120%;height:50px;background:#d84315;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.pintu{position:absolute;bottom:0;left:43%;width:14%;height:48px;background:#795548}
+.jendela{position:absolute;top:25px;width:35px;height:30px;background:#81d4fa;border:3px solid #444}
+.j1{left:15%}.j2{right:15%}
+.pohon{position:absolute;bottom:0;font-size:55px}.pohon1{left:2%}.pohon2{right:2%}
+
+#game{display:none;width:96%;max-width:850px;margin:20px auto}
+.info{display:flex;justify-content:space-around;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.info div{background:#fff;padding:10px 13px;border-radius:10px;font-weight:bold}
+#tantangan{background:#fff3cd;padding:13px;border-radius:12px;margin-bottom:12px}
+#peringatanEndless{display:none;background:#ffebee;color:#c62828;padding:10px;margin-bottom:10px;border-radius:12px;font-weight:bold}
+#areaGame{position:relative;height:430px;background:#a5d6a7;border:5px solid #176b3a;border-radius:18px;overflow:hidden}
+#areaGame:before{content:"🏫";position:absolute;font-size:100px;left:40%;top:35%;opacity:.35}
+#areaGame:after{content:"🌳";position:absolute;font-size:80px;right:5px;bottom:0;opacity:.5}
+.sampah,.benda{position:absolute;font-size:36px;cursor:pointer;z-index:5;user-select:none}
+.sampah{animation:pop .3s ease,floatTrash 2.2s ease-in-out infinite}
+.benda{animation:floatTrash 2.8s ease-in-out infinite}
+.bergerak{animation:gerak 1.3s infinite alternate,floatTrash 1.8s infinite}
+.sampah:hover,.benda:hover{transform:scale(1.25)}
+@keyframes gerak{from{margin-left:0}to{margin-left:90px}}
+@keyframes floatTrash{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-12px) rotate(6deg)}}
+@keyframes pop{0%{transform:scale(.1);opacity:0}70%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+#areaGame.danger{animation:danger .7s infinite}
+@keyframes danger{50%{box-shadow:inset 0 0 35px rgba(244,67,54,.5)}}
+.reward{position:absolute;z-index:50;color:#176b3a;font-weight:900;font-size:23px;pointer-events:none;animation:reward 1s forwards}
+@keyframes reward{to{opacity:0;transform:translateY(-60px) scale(1.2)}}
+.progress{height:10px;background:#ddd;border-radius:10px;margin:10px 0 15px}
+#bar{height:100%;width:0;background:#176b3a;border-radius:10px;transition:.25s}
+#hasil,#cara,#levelSelesai{display:none}
+#hasil h1{font-size:50px;color:#176b3a}
+
+@media(max-width:700px){
+ .startHit{width:48%;height:52px;top:57.5%;min-width:180px}
+ #areaGame{height:400px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🧹 CLEAN SCHOOL</h1>
+<p>School Cleaning Challenge</p>
+</header>
+
+<div class="menu" id="menu" style="display:block;">
+<h2>🏫 Clean School Challenge</h2>
+<div class="sekolah">
+<div class="awan awan1">☁️</div><div class="awan awan2">☁️</div>
+<div class="pohon pohon1">🌳</div><div class="pohon pohon2">🌳</div>
+<div class="gedung"><div class="atap"></div><div class="jendela j1"></div><div class="jendela j2"></div><div class="pintu"></div></div>
+</div>
+<p>Jaga sekolah tetap bersih dan selesaikan semua tantangan!</p><br>
+<button onclick="mulaiGame()">🎮 MULAI</button>
+<button onclick="caraBermain()">📖 CARA BERMAIN</button>
+</div>
+
+<div class="cara" id="cara">
+<h2>📖 Cara Bermain</h2><br>
+<p>🗑️ Klik sampah untuk membersihkan.</p><br>
+<p>⭐ Sampah benar = +10 poin.</p><br>
+<p>❌ Salah klik = -1 nyawa.</p><br>
+<p>❤️ Kamu punya 3 nyawa.</p><br>
+<p>⏱️ Level 1–4 mempunyai batas waktu.</p><br>
+<p>♾️ Level 5 tidak mempunyai batas waktu dan tidak akan selesai.</p><br>
+<p>💥 Jika nyawa habis di level mana pun, kembali ke Level 1.</p><br>
+<button onclick="kembaliMenu()">⬅ Kembali</button>
+</div>
+
+<div id="game">
+<div class="info">
+<div>🏆 Level <span id="level">1</span>/5</div>
+<div>⭐ <span id="score">0</span></div>
+<div>❤️ <span id="nyawa">3</span></div>
+<div>⏱️ <span id="waktu">30</span></div>
+</div>
+
+<div class="progress"><div id="bar"></div></div>
+<div id="tantangan"></div>
+<div id="peringatanEndless">♾️ LEVEL 5 ENDLESS — TIDAK AKAN SELESAI!</div>
+<div id="areaGame"></div>
+<button onclick="kembaliMenu()">🏠 Menu</button>
+</div>
+
+<div class="levelSelesai" id="levelSelesai">
+<h2>🎉 LEVEL BERHASIL!</h2><br>
+<p id="pesanLevel"></p><br>
+<button onclick="lanjutLevel()">🚀 LANJUT LEVEL</button>
+</div>
+
+<div class="hasil" id="hasil">
+<h2>🏆 SELESAI!</h2><br>
+<p>Level 1–4 berhasil diselesaikan.<br>Level 5 adalah mode endless.</p><br>
+<h3>SKOR</h3>
+<h1 id="scoreAkhir">0</h1><br>
+<button onclick="mulaiGame()">🔄 MAIN LAGI</button>
+<button onclick="kembaliMenu()">🏠 MENU</button>
+</div>
+
+<script>
+let level=1,score=0,nyawa=3,waktu=30,jumlah=0,dibersihkan=0,timer,endlessSpawnTimer;
+
+const levels={
+1:{nama:"🏫 Bersihkan Kelas",target:7,waktu:30,sampah:["📄","🥤","🗑️","🍌"]},
+2:{nama:"🌳 Bersihkan Halaman",target:9,waktu:35,sampah:["🍂","🥤","🍾","🗑️"]},
+3:{nama:"🍽️ Bersihkan Kantin",target:11,waktu:40,sampah:["🍌","🥤","🍾","📄","🗑️"]},
+4:{nama:"🚨 Tantangan Cepat",target:13,waktu:35,sampah:["🗑️","🥤","🍌","🍾","📄"]},
+5:{nama:"♾️ MODE ENDLESS",target:999999999,waktu:0,sampah:["📄","🍌","🥤","🍾","🗑️","🥡","🧃","🍟","🧴","🥫"]}
+};
+
+function tutupIntro(){
+ const intro=document.getElementById("intro");
+ intro.style.transition="opacity .6s,transform .6s";
+ intro.style.opacity="0";
+ intro.style.transform="scale(1.04)";
+ setTimeout(()=>intro.style.display="none",600);
+}
+
+function mulaiGame(){
+ clearInterval(timer);clearTimeout(endlessSpawnTimer);
+ level=1;score=0;nyawa=3;
+ ["menu","cara","hasil","levelSelesai"].forEach(id=>document.getElementById(id).style.display="none");
+ document.getElementById("game").style.display="block";
+ mulaiLevel();
+}
+
+function mulaiLevel(){
+ clearInterval(timer);clearTimeout(endlessSpawnTimer);
+ const d=levels[level];
+ jumlah=d.target;dibersihkan=0;waktu=d.waktu;
+
+ document.getElementById("level").innerText=level;
+ document.getElementById("score").innerText=score;
+ document.getElementById("nyawa").innerText=nyawa;
+ document.getElementById("waktu").innerText=level===5?"∞":waktu;
+
+ document.getElementById("tantangan").innerHTML=
+ "🎯 <b>Tantangan:</b> "+d.nama+
+ (level===5
+ ? "<br>🔥 Bersihkan sebanyak mungkin! Level ini tidak akan pernah selesai."
+ : "<br>🗑️ Bersihkan "+d.target+" sampah!");
+
+ document.getElementById("bar").style.width="0%";
+ document.getElementById("areaGame").classList.remove("danger");
+ document.getElementById("peringatanEndless").style.display=level===5?"block":"none";
+
+ buatBenda();
+
+ if(level!==5){
+  timer=setInterval(()=>{
+   waktu--;
+   document.getElementById("waktu").innerText=waktu;
+   if(waktu<=5)document.getElementById("areaGame").classList.add("danger");
+   if(waktu<=0){
+    clearInterval(timer);
+    alert("⏰ Waktu habis! Level akan diulang.");
+    mulaiLevel();
+   }
+  },1000);
+ }
+}
+
+function buatBenda(){
+ const area=document.getElementById("areaGame");
+ area.innerHTML="";
+
+ if(level!==5){
+  for(let i=0;i<levels[level].target;i++) buatSampahBiasa();
+ }else{
+  for(let i=0;i<8;i++) buatSatuSampah();
+ }
+
+ const benda=["🌸","📚","🪑","⚽","🌱"];
+ const jumlahBenda=level===5?8:4;
+
+ for(let i=0;i<jumlahBenda;i++){
+  let b=document.createElement("div");
+  b.className="benda"+(level>=4?" bergerak":"");
+  b.innerText=benda[Math.floor(Math.random()*benda.length)];
+  b.style.left=Math.random()*88+"%";
+  b.style.top=Math.random()*82+"%";
+
+  b.onclick=function(e){
+   e.stopPropagation();
+   nyawa--;
+   document.getElementById("nyawa").innerText=nyawa;
+   b.remove();
+
+   if(nyawa<=0){
+    clearInterval(timer);
+    clearTimeout(endlessSpawnTimer);
+    alert("💥 NYAWA HABIS!\n\nGame kembali ke Level 1.");
+    level=1;
+    score=0;
+    nyawa=3;
+    mulaiLevel();
+   }
+  };
+  area.appendChild(b);
+ }
+}
+
+function buatSampahBiasa(){
+ const area=document.getElementById("areaGame");
+ const data=levels[level];
+ const s=document.createElement("div");
+
+ s.className="sampah";
+ s.innerText=data.sampah[Math.floor(Math.random()*data.sampah.length)];
+ s.style.left=Math.random()*88+"%";
+ s.style.top=Math.random()*82+"%";
+
+ if(level===4)s.classList.add("bergerak");
+
+ s.onclick=function(e){
+  e.stopPropagation();
+
+  let bonus=level===4?5:0;
+  score+=10+bonus;
+  dibersihkan++;
+
+  document.getElementById("score").innerText=score;
+  document.getElementById("bar").style.width=((dibersihkan/jumlah)*100)+"%";
+
+  buatReward(s,"+"+(10+bonus));
+  s.remove();
+
+  if(dibersihkan>=jumlah) selesaiLevel();
+ };
+
+ area.appendChild(s);
+}
+
+function buatSatuSampah(){
+ if(level!==5)return;
+
+ const area=document.getElementById("areaGame");
+ const data=levels[5];
+ const s=document.createElement("div");
+
+ s.className="sampah";
+ s.innerText=data.sampah[Math.floor(Math.random()*data.sampah.length)];
+ s.style.left=Math.random()*88+"%";
+ s.style.top=Math.random()*82+"%";
+
+ let kecepatan=Math.max(.45,1.8-(dibersihkan*.015));
+ s.style.animationDuration=kecepatan+"s";
+
+ s.onclick=function(e){
+  e.stopPropagation();
+
+  let bonus=Math.min(30,Math.floor(dibersihkan/5)*2);
+  score+=10+bonus;
+  dibersihkan++;
+
+  document.getElementById("score").innerText=score;
+  document.getElementById("bar").style.width=((dibersihkan%50)/50*100)+"%";
+
+  buatReward(s,"+"+(10+bonus));
+  s.remove();
+
+  endlessSpawnTimer=setTimeout(
+   buatSatuSampah,
+   Math.max(50,250-(dibersihkan*2))
+  );
+ };
+
+ area.appendChild(s);
+}
+
+function buatReward(el,text){
+ const r=el.getBoundingClientRect();
+ const a=document.getElementById("areaGame").getBoundingClientRect();
+ const e=document.createElement("div");
+
+ e.className="reward";
+ e.innerText="✨ "+text;
+ e.style.left=(r.left-a.left)+"px";
+ e.style.top=(r.top-a.top)+"px";
+
+ document.getElementById("areaGame").appendChild(e);
+ setTimeout(()=>e.remove(),1000);
+}
+
+function selesaiLevel(){
+ clearInterval(timer);
+ clearTimeout(endlessSpawnTimer);
+
+ document.getElementById("game").style.display="none";
+ document.getElementById("levelSelesai").style.display="block";
+ document.getElementById("pesanLevel").innerText=
+ "Level "+level+" berhasil!\nSkor kamu sekarang "+score+" poin.";
+}
+
+function lanjutLevel(){
+ document.getElementById("levelSelesai").style.display="none";
+
+ if(level<5){
+  level++;
+  document.getElementById("game").style.display="block";
+  mulaiLevel();
+ }else{
+  document.getElementById("game").style.display="block";
+  mulaiLevel();
+ }
+}
+
+function caraBermain(){
+ document.getElementById("menu").style.display="none";
+ document.getElementById("cara").style.display="block";
+}
+
+function kembaliMenu(){
+ clearInterval(timer);
+ clearTimeout(endlessSpawnTimer);
+
+ document.getElementById("game").style.display="none";
+ document.getElementById("cara").style.display="none";
+ document.getElementById("levelSelesai").style.display="none";
+ document.getElementById("hasil").style.display="none";
+ document.getElementById("menu").style.display="block";
+}
+</script>
+</body>
+</html>
